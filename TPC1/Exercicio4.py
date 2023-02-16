@@ -7,6 +7,12 @@ class Exercicio4:
             if ((dict[k])["idade"]) > idadeMax:
                 idadeMax = ((dict[k])["idade"])
         return idadeMax
+    def idadeMin(self,dict):
+        idadeMin = 180
+        for k in dict.keys():
+            if ((dict[k])["idade"]) < idadeMin:
+                idadeMin = ((dict[k])["idade"])
+        return idadeMin
     
     def calcula_Distribuicao_FaixaEtaria(self, dict):
         idadeMaxima = self.idadeMax(dict)
@@ -18,7 +24,7 @@ class Exercicio4:
             indL+=1
             self.resultado[chave] = 0
         for k in dict.keys():
-            position = int(((dict[k])["idade"])/5)
+            position = int((((dict[k])["idade"]))/5)
             valorDic = self.resultado[listaIndices[position]]
             valorDic += 1
             self.resultado[listaIndices[position]] = valorDic
