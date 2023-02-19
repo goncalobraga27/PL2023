@@ -1,8 +1,8 @@
-from TPC1.Exercicio1e2 import Exercicio1e2
-from TPC1.Exercicio3 import Exercicio3
-from TPC1.Exercicio4 import Exercicio4
-from TPC1.Exercicio5 import Exercicio5
-from TPC1.Exercicio6 import Exercicio6
+from Exercicio1e2 import Exercicio1e2
+from Exercicio3 import Exercicio3
+from Exercicio4 import Exercicio4
+from Exercicio5 import Exercicio5
+from Exercicio6 import Exercicio6
 from matplotlib import pyplot as plt
 def main():
     geracaoModelo = Exercicio1e2()
@@ -19,10 +19,11 @@ def main():
         dictDataSet = geracaoModelo.geraModelo()
         resultadoDist = calculaDistribuicao.calculaDist(dictDataSet)
         table = "Sexo-> Casos incidentes\n"+"Masculino->"+str(resultadoDist[0])+"\n"+"Feminino->"+str(resultadoDist[1])+"\n"
-        print(table)
+        table1 = "Sexo-> Sem Casos incidentes\n"+"Masculino->"+str(resultadoDist[2])+"\n"+"Feminino->"+str(resultadoDist[3])+"\n"
+        print(table+table1)
 
-        x_values = ["Masculino", "Feminino"]
-        y_values = [resultadoDist[0], resultadoDist[1]]
+        x_values = ["Masculino c/Doença", "Feminino c/Doença", "Masculino s/Doença", "Feminino s/Doença"]
+        y_values = [resultadoDist[0], resultadoDist[1],resultadoDist[2],resultadoDist[3]]
         plt.plot(x_values, y_values)
         plt.show()
     if (int(op)==1):
