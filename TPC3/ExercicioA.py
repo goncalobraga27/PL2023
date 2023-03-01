@@ -15,4 +15,9 @@ class ExercicioA:
                 else:
                     dic[number] = 1
         return dic
-
+    def imprimeResultado(self, dic):
+        resultado = ""
+        for key in dic:
+            resultado += "------Ano:"+str(key)+"------\n"
+            resultado += str(dic[key])+"\n"
+        return resultado
