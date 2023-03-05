@@ -3,11 +3,10 @@ class ExercicioC:
     def calculaFreqGrauParentesco(self, file):
         dic = dict()
         for line in file:
-            expRegex = re.findall(r'\,[A-Z]{1}[a-zA-Z\s]*\.\sP', line)
+            expRegex = re.findall(r'[a-z],([A-Z][a-zA-Z\s]*?)\.( ?P|:)', line)
             if expRegex:
                 for elem in expRegex:
-                    grauParentescoAux = elem[:-3]
-                    grauParentesco = grauParentescoAux[1:]
+                    grauParentesco = elem[0]
                     if grauParentesco not in dic:
                         dic[grauParentesco] = 1
                     else :
