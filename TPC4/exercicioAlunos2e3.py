@@ -2,7 +2,7 @@ import re
 import json
 class alunos2e3:
     def leituraFicheiro(self):
-        file = open("alunos2.csv", "r")
+        file = open("alunos3.csv", "r")
         return file
     def writeFile(self, file):
         listFile = []
@@ -25,17 +25,19 @@ class alunos2e3:
                         dicLine[listaParametros[i]] = expRegexLine[i][:-1]
                     elif i == 3:
                         notas = []
-                        for k in range(3, len(expRegexLine)-1):
+                        for k in range(3, len(expRegexLine)):
                             if expRegexLine[k][-1] == "\n":
-                                notas.append(int(expRegexLine[k][:-1]))
+                                if (expRegexLine[k][:-1]) != '':
+                                    notas.append(int(expRegexLine[k][:-1]))
                             else:
                                 notas.append(int(expRegexLine[k]))
+
                         dicLine["Notas"] = notas
                     else:
                         dicLine[listaParametros[i]] = expRegexLine[i]
                 listFile.append(dicLine)
                 k = k + 1
-        jsonString = json.dumps(listFile)
+        jsonString = json.dumps(listFile, ensure_ascii=False)
         jsonFile = open("alunos2e3.json", "w")
         jsonFile.write(jsonString)
         jsonFile.close()

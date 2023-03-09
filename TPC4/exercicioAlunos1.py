@@ -28,7 +28,7 @@ class alunos1:
                         dicLine[listaParametros[i]] = expRegexLine[i]
                 listFile.append(dicLine)
                 k = k+1
-        jsonString = json.dumps(listFile)
+        jsonString = json.dumps(listFile, ensure_ascii = False)
         jsonFile = open("alunos.json", "w")
         jsonFile.write(jsonString)
         jsonFile.close()
