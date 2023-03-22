@@ -70,37 +70,35 @@ class cabine:
                     else:
                         print("Saldo= " + str(saldoTotal))
                         numeroTelefone = input()
-                        if numeroTelefone == "ABORTAR":
-                            print("Devolvidos: " + str(saldoTotal) + "euros;Volte Sempre!")
-                            break
-                        msg, saldo, numeroValido = self.validaNumero(saldoTotal, numeroTelefone)
-                        saldoTotal = saldo
-                        while numeroValido != 1:
-                            print("Introduza moedas.")
-                            moedasRecebidas = input()
-                            if moedasRecebidas == "ABORTAR":
-                                print("Devolvidos: " + str(saldoTotal) + "euros;Volte Sempre!")
-                                break
-                            msg, estado, saldo = self.calculaSaldo(moedasRecebidas, moedasValidas)
-                            saldoTotal += saldo
-                            if estado == 0:
-                                print("Saldo= " + str(saldoTotal))
-                                print("OPERAÇÃO CANCELADA")
-                                break
-                            else:
-                                print("Saldo= " + str(saldoTotal))
-                                numeroTelefone = input()
-                                if numeroTelefone == "ABORTAR":
+                        while numeroTelefone != 'POUSAR' and numeroTelefone != 'ABORTAR':
+                            msg, saldo, numeroValido = self.validaNumero(saldoTotal, numeroTelefone)
+                            saldoTotal = saldo
+                            while numeroValido != 1:
+                                print("Introduza moedas.")
+                                moedasRecebidas = input()
+                                if moedasRecebidas == "ABORTAR":
                                     print("Devolvidos: " + str(saldoTotal) + "euros;Volte Sempre!")
                                     break
-                                msg, saldo, numeroValido = self.validaNumero(saldoTotal, numeroTelefone)
-                                saldoTotal = saldo
-                        print(msg + " Saldo= " + str(saldoTotal))
-                        fim = input()
-                        if fim == "POUSAR":
+                                msg, estado, saldo = self.calculaSaldo(moedasRecebidas, moedasValidas)
+                                saldoTotal += saldo
+                                if estado == 0:
+                                    print("Saldo= " + str(saldoTotal))
+                                    print("OPERAÇÃO CANCELADA")
+                                    break
+                                else:
+                                    print("Saldo= " + str(saldoTotal))
+                                    numeroTelefone = input()
+                                    if numeroTelefone == "ABORTAR":
+                                        print("Devolvidos: " + str(saldoTotal) + "euros;Volte Sempre!")
+                                        break
+                                    msg, saldo, numeroValido = self.validaNumero(saldoTotal, numeroTelefone)
+                                    saldoTotal = saldo
+                            print(msg + " Saldo= " + str(saldoTotal))
+                            numeroTelefone = input()
+                        if numeroTelefone == "POUSAR":
                             print("Troco: " + str(saldoTotal) + ";Volte Sempre!")
                             break
-                        elif fim == "ABORTAR":
+                        elif numeroTelefone == "ABORTAR":
                             print("Devolvidos: " + str(saldoTotal) + "euros;Volte Sempre!")
                             break
                 elif estadoLevantar == "ABORTAR":
