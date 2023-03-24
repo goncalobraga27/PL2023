@@ -1,22 +1,18 @@
 from ply.lex import lex
 from ply.yacc import yacc
 import re
-
-# Lista que irá ter o resultado do analisador léxico
-resultado = []
-# Função que põe os tokens na lista de resultados
-def adicionaResultado(t, erro):
-    resultado.append((t.lineno, t.lexpos, t.type, t.value, erro))
+inComentario = 0
+inComentarioS = 0
 # Dicionário que contém todas as palavras reservadas da nossa gramática
 reserved = {
     "iComML": "op_iComML",
     "fComML": "op_fComML",
     "nCom":  "op_nCom",
-    "funcao": "function",
-    "while": "while",
-    "program": "program",
-    "for": "for",
-    "print": "print",
+    "funcao": "op_function",
+    "while": "op_while",
+    "program": "op_program",
+    "for": "op_for",
+    "print": "op_print",
     "int": "int",
     "double": "double",
     "float": "float",
@@ -56,90 +52,99 @@ tokens = [
     'array',  # array (Ex: a[5])
     # Operadores para ignorar no input recebido
     'ignore',  # \s\t
-    # Operadores que detetam uma variavel, numero, ‘string’ mal formados
-    'variavel_mf',
-    'numero_mf',
-    'string_mf'
+    'newline'
 ]+list(reserved.values())
 # Regex para tokens mais simples
 # Operadores dos comentários
-t_op_iComML = r'\/\*'
-t_op_fComML = r'\*\\'
-t_op_nCom = r'\/\/'
+t_op_iComML = r"\/\*"
+t_op_fComML = r"\*\/"
+t_op_nCom = r"//"
+# Operadores de funções
+t_op_function = r"function"
+t_op_while = r"while"
+t_op_program = r"program"
+t_op_for = r"for"
+t_op_print = r"print"
 # Operadores Matemáticos
-t_op_mais = r'\+'
-t_op_menos = r'\-'
-t_op_vezes = r'\*'
-t_op_dividir = r'\/'
-t_op_igual = r'\='
+t_op_mais = r"\+"
+t_op_menos = r"-"
+t_op_vezes = r"\*"
+t_op_dividir = r"/"
+t_op_igual = r"="
 
-t_op_igualIgual = r'\=='
-t_op_maior = r'\>'
-t_op_menor = r'\<'
-t_op_maiorIgual = r'\>='
-t_op_menorIgual = r'\<='
-t_op_diferente = r'\!='
+t_op_igualIgual = r"=="
+t_op_maior = r">"
+t_op_menor = r"<"
+t_op_maiorIgual = r">="
+t_op_menorIgual = r"<="
+t_op_diferente = r"!="
 
-t_op_abreChaveta = r'\{'
-t_op_fechaChaveta = r'\}'
-t_op_abreLista = r'\['
-t_op_fechaLista = r'\]'
-t_op_abreParentesis = r'\('
-t_op_fechaParentesis = r'\)'
-t_op_doisPontoFinal = r'\.\.'
+t_op_abreChaveta = r"{"
+t_op_fechaChaveta = r"}"
+t_op_abreLista = r"\["
+t_op_fechaLista = r"\]"
+t_op_abreParentesis = r"\("
+t_op_fechaParentesis = r"\)"
+t_op_doisPontoFinal = r"\.\."
 
-t_op_doisPontos = r'\:'
-t_op_pontoVirgula = r'\;'
-t_op_virgula = r'\,'
-t_op_ponto = r'\.'
+t_op_doisPontos = r":"
+t_op_pontoVirgula = r";"
+t_op_virgula = r","
+t_op_ponto = r"."
 
-t_ignore = r' \t'
+t_ignore = ' \t'
 
 
 # Regex para tokens mais complexos
-
+def t_newline(t):
+    r"""\\n"""
+    t.lexer.lineno += t.value.count('\n')
+    return t
 def t_string(t):
-    r'"[^("|\n)]*"'
-    return adicionaResultado(t, f"Nenhum")
-def t_string_mf(t):
-    r'"[^("|\n?)]*'
-    return adicionaResultado(t, f"String encontra-se mal formada")
-def t_variavel_mf(t):
-    r'([0-9]+[a-z]+)|([@!#$%&*]+[a-z]+)'
-    return adicionaResultado(t, f"Variavel encontra-se mal formada")
-def t_numero_mf(t):
-    r'([0-9]+\.\D*[0-9]*)|([0-9]+\.\D+)'
-    return adicionaResultado(t, f"Número encontra-se mal formado")
+    r'[a-zA-Z]+'
+    t.value = t.value
+    return t
 def t_inteiro(t):
     r'\d+'
-    max = (len(t.value))
-    if max > 15:
-        return adicionaResultado(t, f"Tamanho maior que o suportado")
-        t.value = 0
-    else:
-        t.value = int(t.value)
-        return adicionaResultado(t, f"Nenhum")
+    t.value = int(t.value)
+    return t
 def t_double(t):
     r'(\d*\.\d+)|(\d+\.\d*)'
     t.value = float(t.value)
-    return adicionaResultado(t, f"Nenhum")
-def t_variavel(t):
-    r'[a-z][a-z_0-9]*'
-    max = (len(t.value))
-    if max < 20:
-        if t.value in reserved:
-            t.type = reserved[t.value]
-            return  adicionaResultado(t, f"Palavra Reservada")
-        else:
-            return adicionaResultado(t, f"Nenhum")
-    else:
-        return adicionaResultado(t, f"Tamanho da variavel maior que o suportado")
-def t_new_line(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
+    return t
+def t_VARIAVEL(t):
+    r'[a-zA-Z0-9]+'
+    t.value = t.value
+    return t
+
 def t_error(t):
-    return resultado.append((t.lineno, t.lexpos, f'Inválido', t.value, f'Caractere não reconhecido   por esta linguagem'))
+    print(f'Illegal character {t.value[0]!r} - Na posição {t.lexpos!r}')
     t.lexer.skip(1)
 
 lexer = lex()
+
+while True:
+    i = input("")
+    lexer.input(i)
+    for tok in lexer:
+        if tok.value == '/*':
+            inComentario = 1
+            print(tok.value)
+            print(tok)
+        elif tok.value == '*/':
+            inComentario = 0
+            print(tok.value)
+            print(tok)
+        elif tok.value == '//':
+            inComentarioS = 1
+            print(tok.value)
+            print(tok)
+        elif tok.value == '\\n' and inComentarioS == 1:
+            inComentarioS = 0
+        else:
+            if inComentario == 1 or inComentarioS == 1:
+                pass
+            elif tok.value != '\\n':
+                print(tok.value)
+                print(tok)
 

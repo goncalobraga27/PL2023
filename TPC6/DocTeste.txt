@@ -1,0 +1,3 @@
+/* factorial.p \n -- 2023-03-20 \n -- by jcr \n */ \n int i; \n // Função que calcula o factorial dum número n \n function fact(n){ \n int res = 1; \n \n while res > 1 { \n res = res * n; \n res = res - 1; \n } \n } \n // Programa principal \n program myFact{ \n for i in [1..10]{ \n print(i, fact(i)); \n } \n } \n
+
+/* max.p: calcula o maior inteiro duma lista desordenada\n-- 2023-03-20\n-- by jcr\n*/\nint i = 10, a[10] = {1,2,3,4,5,6,7,8,9,10};\n// Programa principal\nprogram myMax{\nint max = a[0];\nfor i in [1..9]{\nif max < a[i] {\nmax = a[i];\n}\n}\nprint(max);\n}\n
